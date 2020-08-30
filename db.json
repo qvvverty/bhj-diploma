@@ -12,7 +12,7 @@
       "email": "test@test.ru",
       "password": "abracadabra",
       "id": "molwe81tkefpj4i0",
-      "isAuthorized": true
+      "isAuthorized": false
     }
   ],
   "accounts": [

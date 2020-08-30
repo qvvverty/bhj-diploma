@@ -12,8 +12,12 @@ class AsyncForm {
    * Сохраняет переданный элемент и регистрирует события
    * через registerEvents()
    * */
-  constructor( element ) {
-
+  constructor(element) {
+    if (!element) {
+      throw new Error('Передан пустой элемент');
+    }
+    this.element = element;
+    this.registerEvents();
   }
 
   /**
@@ -21,7 +25,10 @@ class AsyncForm {
    * вызывает метод submit()
    * */
   registerEvents() {
-
+    this.element.addEventListener('submit', submit => {
+      submit.preventDefault();
+      this.submit();
+    });
   }
 
   /**
@@ -32,10 +39,15 @@ class AsyncForm {
    * }
    * */
   getData() {
-
+    const formEntries = {};
+    const formData = new FormData(this.element);
+    for (const entry of formData.entries()) {
+      formEntries[entry[0]] = entry[1];
+    }
+    return formEntries;
   }
 
-  onSubmit( options ) {
+  onSubmit(options) {
 
   }
 
@@ -44,6 +56,6 @@ class AsyncForm {
    * данные, полученные из метода getData()
    * */
   submit() {
-
+    this.onSubmit(this.getData());
   }
 }

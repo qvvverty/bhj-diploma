@@ -50,9 +50,9 @@ class User {
           console.error('Ошибка текущей сессии.', err);
           User.unsetCurrent();
         }
+        callback(err, response);
       }
     }
-    callback();
     createRequest(options);
   }
 
@@ -74,9 +74,9 @@ class User {
         } else {
           console.error('Ошибка при входе.', err);
         }
+        callback(err, response);
       }
     }
-    callback();
     return createRequest(options);
   }
 
@@ -98,9 +98,9 @@ class User {
         } else {
           console.error('Ошибка при регистрации', err);
         }
+        callback(err, response);
       }
     }
-    callback();
     return createRequest(options);
   }
 
@@ -117,12 +117,13 @@ class User {
       callback: (err, response) => {
         if (response.success === true) {
           User.unsetCurrent();
+          // App.setState('init');
         } else {
           console.error('Ошибка при выходе', err);
         }
+        callback(err, response);
       }
     }
-    callback();
     return createRequest(options);
   }
 }
