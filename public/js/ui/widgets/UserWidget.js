@@ -10,8 +10,11 @@ class UserWidget {
    * Если переданный элемент не существует,
    * необходимо выкинуть ошибку.
    * */
-  constructor( element ) {
-
+  constructor(element) {
+    if (!element) {
+      throw new Error('Передан пустой элемент');
+    }
+    this.element = element;
   }
 
   /**
@@ -22,6 +25,9 @@ class UserWidget {
    * авторизованного пользователя
    * */
   update() {
-
+    const currentUser = User.current();
+    if (currentUser) {
+      this.element.querySelector('p.user-name').innerText = currentUser.name;
+    }
   }
 }

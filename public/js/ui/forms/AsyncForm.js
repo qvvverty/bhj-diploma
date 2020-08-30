@@ -58,4 +58,10 @@ class AsyncForm {
   submit() {
     this.onSubmit(this.getData());
   }
+
+  clearForm() {
+    for (const input of this.element.getElementsByTagName('input')) {
+      input.value = '';
+    }
+  }
 }

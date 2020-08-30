@@ -12,7 +12,7 @@ class Entity {
    * */
   static list(data, callback = f => f) {
     const options = {
-      url: Entity.URL,
+      url: this.URL,
       method: 'GET',
       responseType: 'json',
       data,
@@ -28,7 +28,7 @@ class Entity {
    * */
   static create(data, callback = f => f) {
     const options = {
-      url: Entity.URL,
+      url: this.URL,
       method: 'POST',
       data,
       callback
@@ -46,7 +46,7 @@ class Entity {
    * */
   static get(id = '', data, callback = f => f) {
     const options = {
-      url: Entity.URL,
+      url: this.URL,
       method: 'GET',
       responseType: 'json',
       data,
@@ -61,7 +61,7 @@ class Entity {
    * */
   static remove(id = '', data, callback = f => f) {
     const options = {
-      url: Entity.URL + '/',
+      url: this.URL + '/',
       method: 'POST',
       responseType: 'json',
       data
@@ -74,5 +74,3 @@ class Entity {
     return createRequest(options);
   }
 }
-
-// Entity.URL = '';
