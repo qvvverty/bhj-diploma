@@ -49,8 +49,12 @@ class Entity {
       url: this.URL,
       method: 'GET',
       responseType: 'json',
+      // id,
       data,
       callback
+    }
+    if (id) {
+      options.url += '/' + id;
     }
     return createRequest(options);
   }
@@ -64,13 +68,15 @@ class Entity {
       url: this.URL + '/',
       method: 'POST',
       responseType: 'json',
-      data
+      data,
+      callback
     }
     if (!data) {
       options.data = {};
-      options.data._method = 'DELETE';
-      options.data[id];
+      // options.data[id]; // ???
     }
+    options.data._method = 'DELETE';
+    options.data.id = id;
     return createRequest(options);
   }
 }

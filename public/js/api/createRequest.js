@@ -50,7 +50,7 @@ const createRequest = (options = {}) => {
   // const error = null;
 
   if (options.method === 'GET') {
-    let paramsString = options.url;;
+    let paramsString = options.url;
     if (options.data) {
       paramsString += '?';
       const dataKeys = Object.keys(options.data);
