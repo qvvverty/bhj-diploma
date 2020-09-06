@@ -20,7 +20,6 @@ class Modal {
     }
     this.element = element;
     this.registerEvents();
-    // this.open();
   }
 
   /**
@@ -31,7 +30,6 @@ class Modal {
   registerEvents() {
     const dismissElems = this.element.querySelectorAll('[data-dismiss="modal"]');
     for (const elem of dismissElems) {
-      // elem.addEventListener('click', this.onClose);
       elem.onclick = this.onClose;
     }
   }

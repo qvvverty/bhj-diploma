@@ -51,7 +51,7 @@ const createRequest = (options = {}) => {
 
   if (options.method === 'GET') {
     let paramsString = options.url;
-    if (options.data) {
+    if (options.data !== undefined && Object.keys(options.data).length > 0) {
       paramsString += '?';
       const dataKeys = Object.keys(options.data);
       for (let i = 0; i < dataKeys.length; i++) {
@@ -62,17 +62,9 @@ const createRequest = (options = {}) => {
       }
     }
     request.open(options.method, paramsString, true);
-    // try {
     setResponseType();
-    // } catch (err) {
-    //   error = err;
-    // }
     setRequestHeaders();
-    // try {
     request.send();
-    // } catch (err) {
-    //   error = err;
-    // }
   } else if (options.method) {
     request.open(options.method, options.url, true);
     setResponseType();
@@ -83,11 +75,7 @@ const createRequest = (options = {}) => {
         formData.append(key, options.data[key]);
       }
     }
-    // try {
     request.send(formData);
-    // } catch (err) {
-    //   error = err;
-    // }
   }
 
   return request;

@@ -71,9 +71,6 @@ class AccountsWidget {
    * в боковой колонке
    * */
   clear() {
-    // for (const accountElem of this.element.getElementsByClassName('account')) {
-    //   accountElem.remove();
-    // }
     const accounts = this.element.getElementsByClassName('account');
     for (let i = accounts.length - 1; i >= 0; i--) {
       accounts[i].remove();
@@ -89,7 +86,7 @@ class AccountsWidget {
    * */
   onSelectAccount(element) {
     const activeAccElem = this.element.querySelector('li.active');
-    if (activeAccElem) { // && activeAccElem !== element) {
+    if (activeAccElem) {
       activeAccElem.classList.remove('active');
     }
     element.classList.add('active');

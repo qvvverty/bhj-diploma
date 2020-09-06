@@ -3,13 +3,15 @@
  * создания новой транзакции
  * Наследуется от AsyncForm
  * */
-class CreateTransactionForm {
+class CreateTransactionForm extends AsyncForm {
   /**
    * Вызывает родительский конструктор и
    * метод renderAccountsList
    * */
-  constructor( element ) {
-
+  constructor(element) {
+    super(element);
+    this.element = element;
+    this.renderAccountsList();
   }
 
   /**
@@ -17,7 +19,15 @@ class CreateTransactionForm {
    * Обновляет в форме всплывающего окна выпадающий список
    * */
   renderAccountsList() {
-
+    Account.list(User.current(), (err, response) => {
+      if (response.success/* && response.data.length > 0*/) {
+        const formSelect = this.element.querySelector('select');
+        formSelect.innerHTML = '';
+        for (const account of response.data) {
+          formSelect.insertAdjacentHTML('beforeend', `<option value="${account.id}">${account.name}</option>`);
+        }
+      }
+    });
   }
 
   /**
@@ -26,7 +36,16 @@ class CreateTransactionForm {
    * вызывает App.update(), сбрасывает форму и закрывает окно,
    * в котором находится форма
    * */
-  onSubmit( options ) {
-
+  onSubmit(options) {
+    Transaction.create(options, (err, response) => {
+      if (response.success) {
+        this.clearForm();
+        App.getModal('newIncome').close();
+        App.getModal('newExpense').close();
+        App.update();
+      } else {
+        console.error(response.error);
+      }
+    });
   }
 }

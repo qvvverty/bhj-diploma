@@ -24,6 +24,8 @@ class TransactionsPage {
   update() {
     if (this.lastOptions) {
       this.render(this.lastOptions);
+    } else {
+      this.render();
     }
   }
 
@@ -35,14 +37,13 @@ class TransactionsPage {
    * */
   registerEvents() {
     this.element.addEventListener('click', click => {
-      if (click.target.classList.contains('remove-account')) {
+      if (click.target.closest('button.remove-account')) {
         this.removeAccount();
       }
     });
     this.element.addEventListener('click', click => {
-      if (click.target.classList.contains('transaction__remove')) {
-        // console.log('Aaa!');
-        this.removeTransaction(click.target.dataset.id); // transaction id
+      if (click.target.closest('button.transaction__remove')) {
+        this.removeTransaction(click.target.closest('button.transaction__remove').dataset.id);
       }
     });
   }
@@ -56,12 +57,17 @@ class TransactionsPage {
    * для обновления приложения
    * */
   removeAccount() {
-    if (!this.lastOptions) {
+    if (this.lastOptions === undefined) {
       return;
     }
-    reallyRemove = confirm('Вы действительно хотите удалить счёт?');
+    const reallyRemove = confirm('Вы действительно хотите удалить счёт?');
     if (reallyRemove) {
-      Account.remove(); // id, data и callback
+      Account.remove(document.querySelector('li.account.active').dataset.id, {}, (err, response) => {
+        if (response.success) {
+          this.clear();
+          App.update();
+        }
+      });
     }
   }
 
@@ -71,7 +77,14 @@ class TransactionsPage {
    * По удалению транзакции вызовите метод App.update()
    * */
   removeTransaction(id) {
-
+    const reallyRemove = confirm('Вы действительно хотите удалить эту транзакцию?');
+    if (reallyRemove) {
+      Transaction.remove(id, {}, (err, response) => {
+        if (response.success) {
+          App.update();
+        }
+      });
+    }
   }
 
   /**
@@ -90,9 +103,9 @@ class TransactionsPage {
         this.renderTitle(response.data.name);
       }
     });
-    Transaction.list(options/*{ 'account_id': options['account_id'] }*/, (err, response) => {
+    Transaction.list(options, (err, response) => {
       if (response.success) {
-        this.clear();
+        this.renderTransactions([]);
         this.renderTransactions(response.data);
       }
     });
@@ -105,13 +118,15 @@ class TransactionsPage {
    * */
   clear() {
     this.renderTransactions([]);
+    this.renderTitle('Название счёта');
+    this.lastOptions = '';
   }
 
   /**
    * Устанавливает заголовок в элемент .content-title
    * */
-  renderTitle(name) { // сначала сделать это и рендер всей страницы
-    document.querySelector('span.content-title').innerText = name;
+  renderTitle(name) {
+    this.element.querySelector('span.content-title').innerText = name;
   }
 
   /**
@@ -120,7 +135,7 @@ class TransactionsPage {
    * */
   formatDate(date) {
     const dateParsed = new Date(Date.parse(date));
-    return `${dateParsed.toLocaleString('ru', {day: 'numeric', month: 'long', year: 'numeric'})} в ${dateParsed.toLocaleString('ru', {hour: '2-digit', minute: '2-digit'})}`;
+    return `${dateParsed.toLocaleString('ru', { day: 'numeric', month: 'long', year: 'numeric' })} в ${dateParsed.toLocaleString('ru', { hour: '2-digit', minute: '2-digit' })}`;
   }
 
   /**
@@ -129,7 +144,7 @@ class TransactionsPage {
    * */
   getTransactionHTML(item) {
     return `
-      <div class="transaction transaction_${item.type} row">
+      <div class="transaction transaction_${item.type.toLowerCase()} row">
         <div class="col-md-7 transaction__details">
           <div class="transaction__icon">
             <span class="fa fa-money fa-2x"></span>
@@ -158,11 +173,9 @@ class TransactionsPage {
    * используя getTransactionHTML
    * */
   renderTransactions(data) {
-    const pageContent = document.querySelector('section.content');
+    const pageContent = this.element.querySelector('section.content');
     if (data.length === 0) {
       pageContent.innerHTML = '';
-      this.renderTitle('Название счёта');
-      this.lastOptions = '';
     }
     for (const transaction of data) {
       pageContent.insertAdjacentHTML('afterbegin', this.getTransactionHTML(transaction));

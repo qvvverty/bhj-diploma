@@ -1,5 +1,3 @@
-// const { response } = require("express");
-
 /**
  * Класс User управляет авторизацией, выходом и
  * регистрацией пользователя из приложения
@@ -117,7 +115,6 @@ class User {
       callback: (err, response) => {
         if (response.success === true) {
           User.unsetCurrent();
-          // App.setState('init');
         } else {
           console.error('Ошибка при выходе', err);
         }

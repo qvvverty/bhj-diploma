@@ -4,7 +4,6 @@
  * */
 class Entity {
   static URL = '';
-  // URL = '';
   /**
    * Запрашивает с сервера список данных.
    * Это могут быть счета или доходы/расходы
@@ -30,13 +29,14 @@ class Entity {
     const options = {
       url: this.URL,
       method: 'POST',
+      responseType: 'json',
       data,
       callback
     }
     if (!data) {
       options.data = {};
-      options.data._method = 'PUT';
     }
+    options.data._method = 'PUT';
     return createRequest(options);
   }
 
@@ -49,7 +49,6 @@ class Entity {
       url: this.URL,
       method: 'GET',
       responseType: 'json',
-      // id,
       data,
       callback
     }
@@ -73,7 +72,6 @@ class Entity {
     }
     if (!data) {
       options.data = {};
-      // options.data[id]; // ???
     }
     options.data._method = 'DELETE';
     options.data.id = id;
